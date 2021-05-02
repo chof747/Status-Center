@@ -1,0 +1,141 @@
+#include "mqtt.h"
+#include "wifi.h"
+#include <ESP8266WiFi.h> // ESP8266 WiFi driver
+#include "logger.h"
+
+#define MODULE "MQTT"
+
+WiFiClient esp_client;
+MqttClient mqttClient;
+
+#define TELE_TOPIC_BASE "tele/" DEVICE_NAME
+#define CMND_TOPIC_BASE "cmnd/" DEVICE_NAME
+#define STAT_TOPIC_BASE "stat/" DEVICE_NAME
+
+MqttClient::MqttClient() : client(esp_client), mqttClientId()
+//****************************************************************************************
+{
+
+}
+
+void MqttClient::setup()
+//****************************************************************************************
+{
+    MQTT_CALLBACK_SIGNATURE = std::bind(&MqttClient::subscriptionCallback, 
+                                        this, 
+                                        std::placeholders::_1, 
+                                        std::placeholders::_2, std
+                                        ::placeholders::_3);
+
+    client.setServer(MQTT_BROKER, 1883);
+    client.setCallback(callback);
+    client.setBufferSize(255);
+
+    Log.info(MODULE, "Initializing MQTT connection to: %s", MQTT_BROKER);
+}
+
+void MqttClient::loop()
+//****************************************************************************************
+{
+    if (reconnect())
+    {
+        client.loop();
+    }
+
+}
+
+void MqttClient::tele(const char* topic, const char* message, bool retain)
+//****************************************************************************************
+{
+    char topicbuf[255];
+    sprintf(topicbuf,"%s/%s", TELE_TOPIC_BASE, topic);
+    publish(topicbuf,message,retain);
+}
+
+void MqttClient::stat(const char* topic, const char* message, bool retain)
+//****************************************************************************************
+{
+    char topicbuf[255];
+    sprintf(topicbuf,"%s/%s", STAT_TOPIC_BASE, topic);
+    publish(topicbuf,message,retain);
+}
+
+void MqttClient::publish(const char* topic, const char* message, bool retain)
+//****************************************************************************************
+{
+    Log.debug(MODULE, "Publishing for topic: %s", topic);
+    Log.debug(MODULE, "Content: %s", message);
+    client.publish(topic, message);
+}
+
+bool MqttClient::subscribe(const char* topic, callback_t callback)
+//****************************************************************************************
+{
+
+    if (freeSubscriptionIx<MQTT_SUBSCRIPTIONS)
+    {
+        char topicbuf[255];
+
+        sprintf(topicbuf,"%s/%s", CMND_TOPIC_BASE, topic);
+        subscriptions[freeSubscriptionIx].topic = topicbuf;
+        subscriptions[freeSubscriptionIx].callback = callback;
+
+        client.subscribe(topicbuf);
+        Log.info(MODULE, "Subscribing to topic %s", topicbuf);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
+}
+
+bool MqttClient::reconnect()
+//****************************************************************************************
+{
+    if (!client.connected())
+    {
+        //set the client ID
+        sprintf(mqttClientId, "alarmc-%x", ESP.getChipId());
+        int counter = 0;
+
+        while ((!client.connected()) && (counter < 3))
+        {
+            Log.info(MODULE, "Attempting MQTT connection to %s as %s ... ", 
+                     MQTT_BROKER, MQTT_USER);
+            if (client.connect(mqttClientId,  MQTT_USER, MQTT_PASSWORD))
+            {
+                Log.info(MODULE, "connected to %s", MQTT_BROKER);
+                stat("status", "connected");
+            }
+            else
+            {
+                Log.warn(MODULE, "failed to connect to %s, rc was %d", 
+                         MQTT_BROKER, client.state());
+                delay(5000);
+            }
+
+            ++counter;
+        }
+
+        if (!client.connected())
+        {
+            Log.error(MODULE, 
+                      "Could not reconnect to MQTT broker %s - please check the connections and reboot", 
+                      MQTT_BROKER);
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    return true;
+}
+
+void MqttClient::subscriptionCallback(char* topic, uint8_t* payload, unsigned int length)
+//****************************************************************************************
+{
+
+}
