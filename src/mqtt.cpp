@@ -12,6 +12,8 @@ MqttClient mqttClient;
 #define CMND_TOPIC_BASE "cmnd/" DEVICE_NAME
 #define STAT_TOPIC_BASE "stat/" DEVICE_NAME
 
+#include "topic_matcher.h"
+
 MqttClient::MqttClient() : client(esp_client), mqttClientId()
 //****************************************************************************************
 {
@@ -32,6 +34,7 @@ void MqttClient::setup()
     client.setBufferSize(255);
 
     Log.info(MODULE, "Initializing MQTT connection to: %s", MQTT_BROKER);
+    reconnect();
 }
 
 void MqttClient::loop()
@@ -137,5 +140,23 @@ bool MqttClient::reconnect()
 void MqttClient::subscriptionCallback(char* topic, uint8_t* payload, unsigned int length)
 //****************************************************************************************
 {
+    //the payload needs to be zero terminated for the following procedure
+    //NOTE: If this leads to runtime errors, replace with copying the payload into a 
+    //      real char array of the given length
+    payload[length] = 0;
 
+    Log.debug(MODULE, "Received: %s", topic);
+    Log.debug(MODULE, "Content (length:%d): %s", length,(char*)payload);
+
+    for(int i=0;i<MQTT_SUBSCRIPTIONS;++i)
+    {
+        if (topic_match(topic, subscriptions[i].topic.c_str()))
+        {
+            //trim the standard command topic base name but leave the leading /
+            topic += strlen(CMND_TOPIC_BASE);
+            String t = String(topic);
+            String m = String((char*)payload);
+            subscriptions->callback(t,m);
+        }
+    }
 }

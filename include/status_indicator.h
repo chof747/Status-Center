@@ -15,4 +15,6 @@ class StatusIndicator: public Component, MqttSubscriber
         void loop();
 };
 
+extern StatusIndicator statusIndicator;
+
 #endif //STATUS_INDICATOR_H
