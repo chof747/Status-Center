@@ -3,8 +3,9 @@
 #include "wifi.h"
 #include "mqtt.h"
 #include "status_indicator.h"
+#include "button_controls.h"
 
-#define MAX_COMPONENTS  3
+#define MAX_COMPONENTS  4
 
 Component* components[MAX_COMPONENTS];
 
@@ -18,6 +19,7 @@ void setup()
   components[0] = &wifiManager;
   components[1] = &mqttClient;
   components[2] = &statusIndicator;
+  components[3] = &buttonControls;
 
   for(int i=0;i<MAX_COMPONENTS;++i)
   {
