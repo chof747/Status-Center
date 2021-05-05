@@ -9,7 +9,7 @@
 #define MQTT_USER       ""
 #define MQTT_PASSWORD   ""
 
-#define MQTT_SUBSCRIPTIONS 1
+#define MQTT_SUBSCRIPTIONS 2
 
 
 #endif //CONFIG_H
