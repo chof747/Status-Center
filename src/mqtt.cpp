@@ -82,6 +82,7 @@ bool MqttClient::subscribe(const char* topic, callback_t callback)
         sprintf(topicbuf,"%s/%s", CMND_TOPIC_BASE, topic);
         subscriptions[freeSubscriptionIx].topic = topicbuf;
         subscriptions[freeSubscriptionIx].callback = callback;
+        freeSubscriptionIx += 1;
 
         client.subscribe(topicbuf);
         Log.info(MODULE, "Subscribing to topic %s", topicbuf);
