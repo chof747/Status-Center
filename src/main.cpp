@@ -27,11 +27,6 @@ void setup()
   {
     components[i]->setup();
   }
-
-  display.printto(1,"Line %d", 1);
-  display.printto(2,"Name: %s", "chof");
-  display.printto(3,"abcdefghijk");
-
 }
 
 void loop() 
