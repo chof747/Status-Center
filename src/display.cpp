@@ -28,9 +28,11 @@ void Display::setup()
         device.display();
         delay(2000);
         device.clearDisplay();
+        
         setDisplayFont(&SFCompactText10pt8b);
         device.setTextWrap(false);
         device.setTextColor(SSD1306_WHITE);
+        
         changed = true;
     }
 }
@@ -69,6 +71,7 @@ bool Display::printto(uint8_t line, const char *text, ...)
         device.setCursor(0, (line - 1) * fontData.yAdvance + fontData.yAdvance / 2);
         device.print(buffer);
         Log.info(MODULE, "Putting \"%s\" to line %d", buffer, line);
+        changed = true;
         return true;
     }
     else
