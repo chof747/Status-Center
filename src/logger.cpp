@@ -4,6 +4,7 @@
 const char *LEVEL_LABELS[5] = { "NONE", "ERROR", "WARNING", "INFO", "DEBUG"};
 
 Logger::Logger(int logLevel)
+//****************************************************************************************
 {
     this->logLevel = logLevel;
     if (Logger::NONE != logLevel)
@@ -13,6 +14,7 @@ Logger::Logger(int logLevel)
 }
 
 void Logger::log(int level, const char* component, const char* message, va_list args)
+//****************************************************************************************
 {
     if (Logger::NONE != this->logLevel)
     {   
