@@ -4,12 +4,16 @@
 #include <Arduino.h>
 #include "component.h"
 
+class ButtonController;
+
 class ButtonControls: public Component
 {
   public:
     void setup();
     void loop();
-  
+
+    void setController(ButtonController* controller);
+
   private:
   
     static const int BTN_ACCEPT = D8;
@@ -21,6 +25,8 @@ class ButtonControls: public Component
     unsigned long eventTime;
     uint8_t clicks;
     bool longPress;
+
+    ButtonController* controller;
 
     uint8_t readButtons();
 };

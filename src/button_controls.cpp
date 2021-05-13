@@ -1,4 +1,5 @@
 #include "button_controls.h"
+#include "controller/button_controller.h"
 #include "logger.h"
 
 #define MODULE "BUTTONS"
@@ -10,6 +11,8 @@
 void ButtonControls::setup()
 //*********************************************************************************
 {
+  controller = NULL;
+
   pinMode(ButtonControls::BTN_ACCEPT, INPUT);
   digitalWrite(ButtonControls::BTN_ACCEPT, LOW);
   Log.debug(MODULE, "Defined Accept Button on GPIO %d", ButtonControls::BTN_ACCEPT);
@@ -76,20 +79,39 @@ void ButtonControls::loop()
       if (longPress)
       {
         Log.debug(MODULE, "Long press of button state x%02X", eventState);
+        if (controller != NULL)
+        {
+          controller->onLongPress(eventState);
+        }
       }
       else if (2 == clicks)
       {
         Log.debug(MODULE, "Double Click of button state x%02X", eventState);
+        if (controller != NULL)
+        {
+          controller->onDblClick(eventState);
+        }
       }
       else 
       {
         Log.debug(MODULE, "Click of button state x%02X", eventState);
+        if (controller != NULL)
+        {
+          controller->onClick(eventState);
+        }
+
       }
 
       clicks = 0;
       eventTime = 0;
       eventState = 0;
   }
+}
+
+void ButtonControls::setController(ButtonController* controller)
+//*********************************************************************************
+{
+  this->controller = controller;
 }
 
 uint8_t ButtonControls::readButtons()
