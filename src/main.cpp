@@ -6,10 +6,21 @@
 #include "button_controls.h"
 #include "display.h"
 
+#include "controller/controller.h"
+#include "controller/idle_controller.h"
+
 #define MAX_COMPONENTS  5
 
 Component* components[MAX_COMPONENTS];
 
+Controller* activeController = NULL;
+
+void onNextController(Controller* active)
+{
+  activeController = active;
+}
+
+IdleController idle(&buttonControls, &onNextController);
 
 void setup() 
 //****************************************************************************************
@@ -27,6 +38,9 @@ void setup()
   {
     components[i]->setup();
   }
+
+  activeController = &idle;
+  activeController->activate();
 }
 
 void loop() 
@@ -37,5 +51,12 @@ void loop()
   {
     components[i]->loop();
   }
+
+  //do any work in the currently active controller
+  if (NULL != activeController)
+  {
+    activeController->loop();
+  }
+
   delay(10);
 }
