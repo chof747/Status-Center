@@ -3,21 +3,21 @@
 
 #include <Arduino.h>
 
-class Controller;
-typedef void(*activation_cb_t)(Controller* active);
+class ControllerBase;
+typedef void(*activation_cb_t)(ControllerBase* active);
 
-class Controller 
+class ControllerBase 
 {
     public:
     
-    Controller(activation_cb_t cb);
+    ControllerBase(activation_cb_t cb);
     
     virtual void activate() = 0;
     virtual void loop() = 0;
     virtual void deactivate() {}
 
-    void setNext(Controller* c);
-    void setAlternateNext(Controller* c);
+    void setNext(ControllerBase* c);
+    void setAlternateNext(ControllerBase* c);
 
 
     protected:
@@ -27,8 +27,8 @@ class Controller
 
     private:
 
-    Controller* next;
-    Controller* alternateNext;
+    ControllerBase* next;
+    ControllerBase* alternateNext;
 
     activation_cb_t activationCallBack;
 

@@ -6,16 +6,16 @@
 #include "button_controls.h"
 #include "display.h"
 
-#include "controller/controller.h"
+#include "controller/base.h"
 #include "controller/idle_controller.h"
 
 #define MAX_COMPONENTS  5
 
 Component* components[MAX_COMPONENTS];
 
-Controller* activeController = NULL;
+ControllerBase* activeController = NULL;
 
-void onNextController(Controller* active)
+void onNextController(ControllerBase* active)
 {
   activeController = active;
 }

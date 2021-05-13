@@ -1,12 +1,12 @@
 #ifndef IDLE_CONTROLLER_H
 #define IDLE_CONTROLLER_H
 
-#include "controller/controller.h"
+#include "controller/base.h"
 #include "controller/button_controller.h"
 
 class ButtonControls;
 
-class IdleController: public Controller, public ButtonController
+class IdleController: public ControllerBase, public ButtonController
 {
     public:
 

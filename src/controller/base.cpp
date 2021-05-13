@@ -1,21 +1,21 @@
-#include "controller/controller.h"
+#include "controller/base.h"
 
-Controller::Controller(activation_cb_t cb): 
+ControllerBase::ControllerBase(activation_cb_t cb): 
   next(NULL), alternateNext(NULL), activationCallBack(cb) {}
 
-void Controller::setNext(Controller* c)
+void ControllerBase::setNext(ControllerBase* c)
 //****************************************************************************************
 {
     this->next = c;
 }
 
-void Controller::setAlternateNext(Controller* c)
+void ControllerBase::setAlternateNext(ControllerBase* c)
 //****************************************************************************************
 {
     this->alternateNext = c;
 }
 
-void Controller::gotoNext()
+void ControllerBase::gotoNext()
 //****************************************************************************************
 {
     if (NULL != next)
@@ -25,7 +25,7 @@ void Controller::gotoNext()
     }
 }
 
-void Controller::gotoAlternateNext()
+void ControllerBase::gotoAlternateNext()
 //****************************************************************************************
 {
     if (NULL != alternateNext)

@@ -5,7 +5,7 @@
 #define MODULE "IDLE"
 
 IdleController::IdleController(ButtonControls* buttons, activation_cb_t cb): 
-  Controller(cb), ButtonController()
+  ControllerBase(cb), ButtonController()
 //*********************************************************************************
 {
     this->buttons = buttons;
