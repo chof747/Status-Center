@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include "Adafruit_GFX.h"
-#include "component.h"
+#include "component/component.h"
 
 class Display: public Component
 {

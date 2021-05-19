@@ -1,5 +1,5 @@
 #include "controller/idle_controller.h"
-#include "button_controls.h"
+#include "component/button_controls.h"
 #include "logger.h"
 
 #define MODULE "IDLE"

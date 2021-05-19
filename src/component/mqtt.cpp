@@ -1,5 +1,5 @@
-#include "mqtt.h"
-#include "wifi.h"
+#include "component/mqtt.h"
+#include "component/wifi.h"
 #include <ESP8266WiFi.h> // ESP8266 WiFi driver
 #include "logger.h"
 
@@ -12,7 +12,7 @@ MqttClient mqttClient;
 #define CMND_TOPIC_BASE "cmnd/" DEVICE_NAME
 #define STAT_TOPIC_BASE "stat/" DEVICE_NAME
 
-#include "topic_matcher.h"
+#include "component/mqtt/topic_matcher.h"
 
 MqttClient::MqttClient() : client(esp_client), mqttClientId()
 //****************************************************************************************

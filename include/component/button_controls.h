@@ -2,7 +2,7 @@
 #define BUTTON_CONTROLS_H
 
 #include <Arduino.h>
-#include "component.h"
+#include "component/component.h"
 
 class ButtonController;
 

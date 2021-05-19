@@ -1,5 +1,5 @@
-#include "status_indicator.h"
-#include "mqtt.h"
+#include "component/status_indicator.h"
+#include "component/mqtt.h"
 #include "logger.h"
 
 #include <ArduinoJson.h>

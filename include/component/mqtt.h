@@ -2,7 +2,7 @@
 #define MQTT_H
 
 #include <PubSubClient.h>
-#include "component.h"
+#include "component/component.h"
 #include "config.h"
 
 typedef std::function<void(String topic, String payload)> callback_t;

@@ -1,10 +1,10 @@
 #include <Arduino.h>
 #include "logger.h"
-#include "wifi.h"
-#include "mqtt.h"
-#include "status_indicator.h"
-#include "button_controls.h"
-#include "display.h"
+#include "component/wifi.h"
+#include "component/mqtt.h"
+#include "component/status_indicator.h"
+#include "component/button_controls.h"
+#include "component/display.h"
 
 #include "controller/base.h"
 #include "controller/idle_controller.h"

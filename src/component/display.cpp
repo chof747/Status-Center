@@ -1,6 +1,6 @@
 #include <stdarg.h>
 
-#include "display.h"
+#include "component/display.h"
 #include "logger.h"
 
 #include "Adafruit_SSD1306.h"

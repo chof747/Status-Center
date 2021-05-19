@@ -2,7 +2,7 @@
 #define STATUS_INDICATOR_H
 
 #include "component.h"
-#include "mqtt_subscriber.h"
+#include "component/mqtt/mqtt_subscriber.h"
 #include <Arduino.h>
 
 class StatusIndicator: public Component, MqttSubscriber
