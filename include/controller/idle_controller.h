@@ -16,10 +16,6 @@ class IdleController: public ControllerBase, public ButtonController
     void loop();
 
     void onClick(uint8_t state);
-
-    private:
-
-    ButtonControls* buttons;
 };
 
 #endif //IDLE_CONTROLLER_H
