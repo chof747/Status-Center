@@ -14,11 +14,15 @@ class ButtonControls: public Component
 
     void setController(ButtonController* controller);
 
+    static const int BTN_ACCEPT = 0x01;
+    static const int BTN_UP     = 0x02;
+    static const int BTN_DOWN   = 0x04;
+
   private:
   
-    static const int BTN_ACCEPT = D8;
-    static const int BTN_UP     = D3;
-    static const int BTN_DOWN   = D4;
+    static const int PIN_ACCEPT = D8;
+    static const int PIN_UP     = D3;
+    static const int PIN_DOWN   = D4;
   
     uint8_t state;
     uint8_t eventState;

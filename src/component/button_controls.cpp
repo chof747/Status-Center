@@ -13,17 +13,17 @@ void ButtonControls::setup()
 {
   controller = NULL;
 
-  pinMode(ButtonControls::BTN_ACCEPT, INPUT);
-  digitalWrite(ButtonControls::BTN_ACCEPT, LOW);
-  Log.debug(MODULE, "Defined Accept Button on GPIO %d", ButtonControls::BTN_ACCEPT);
+  pinMode(ButtonControls::PIN_ACCEPT, INPUT);
+  digitalWrite(ButtonControls::PIN_ACCEPT, LOW);
+  Log.debug(MODULE, "Defined Accept Button on GPIO %d", ButtonControls::PIN_ACCEPT);
   
-  pinMode(ButtonControls::BTN_UP, INPUT_PULLUP);
-  digitalWrite(ButtonControls::BTN_UP, HIGH);
-  Log.debug(MODULE, "Defined Up Button on GPIO %d", ButtonControls::BTN_UP);
+  pinMode(ButtonControls::PIN_UP, INPUT_PULLUP);
+  digitalWrite(ButtonControls::PIN_UP, HIGH);
+  Log.debug(MODULE, "Defined Up Button on GPIO %d", ButtonControls::PIN_UP);
   
-  pinMode(ButtonControls::BTN_DOWN, INPUT_PULLUP);
-  digitalWrite(ButtonControls::BTN_DOWN, HIGH);
-  Log.debug(MODULE, "Defined Down Button on GPIO %d", ButtonControls::BTN_DOWN);
+  pinMode(ButtonControls::PIN_DOWN, INPUT_PULLUP);
+  digitalWrite(ButtonControls::PIN_DOWN, HIGH);
+  Log.debug(MODULE, "Defined Down Button on GPIO %d", ButtonControls::PIN_DOWN);
   
   state = 0;  
   eventState = 0;
@@ -126,9 +126,9 @@ uint8_t ButtonControls::readButtons()
    *   - If it is a pulled-up button invert the output of digitalRead to achieve
    *     a LOW for off and HIGH for on
    */
-  return digitalRead(ButtonControls::BTN_ACCEPT) 
-         | !digitalRead(ButtonControls::BTN_UP) << 1 
-         | !digitalRead(ButtonControls::BTN_DOWN) << 2; 
+  return digitalRead(ButtonControls::PIN_ACCEPT) 
+         | !digitalRead(ButtonControls::PIN_UP) << 1 
+         | !digitalRead(ButtonControls::PIN_DOWN) << 2; 
   
 }
 
