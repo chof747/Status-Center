@@ -2,6 +2,8 @@
 #include "component/button_controls.h"
 #include "logger.h"
 
+#include "component/display.h"
+
 #define MODULE "IDLE"
 
 IdleController::IdleController(ButtonControls* buttons, activation_cb_t cb): 
@@ -13,7 +15,9 @@ IdleController::IdleController(ButtonControls* buttons, activation_cb_t cb):
 void IdleController::activate()
 //*********************************************************************************
 {
+    Log.debug(MODULE, "Idle Controller activated");
     attach();    
+    display.clear();
 }
 
 void IdleController::loop()
@@ -25,6 +29,5 @@ void IdleController::loop()
 void IdleController::onClick(uint8_t state)
 //*********************************************************************************
 {
-    Log.info(MODULE, "Activating next controller from idle state!");
     gotoNext();
 }
