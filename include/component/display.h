@@ -14,6 +14,7 @@ class Display: public Component
         bool printto(uint8_t line, const char* text, ...);
         uint8_t getMaxLines();
         void setDisplayFont(const GFXfont* font);
+        void clear();
 
     private:
         bool changed;

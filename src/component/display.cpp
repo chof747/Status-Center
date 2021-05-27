@@ -4,7 +4,7 @@
 #include "logger.h"
 
 #include "Adafruit_SSD1306.h"
-#include "appfonts/SFCompactTextS9B8.h"
+#include "appfonts/SFCompactTextS8B8.h"
 
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
@@ -29,7 +29,7 @@ void Display::setup()
         delay(2000);
         device.clearDisplay();
         
-        setDisplayFont(&SFCompactText10pt8b);
+        setDisplayFont(&SFCompactText8pt8b);
         device.setTextWrap(false);
         device.setTextColor(SSD1306_WHITE);
         
@@ -55,6 +55,12 @@ void Display::loop()
         device.clearDisplay();
         changed = false;
     }
+}
+
+void Display::clear()
+//****************************************************************************************
+{
+    changed = true;
 }
 
 bool Display::printto(uint8_t line, const char *text, ...)
