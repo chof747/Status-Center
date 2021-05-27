@@ -1,10 +1,12 @@
 #include <stdarg.h>
+#include <string.h>
 
 #include "component/display.h"
 #include "logger.h"
 
 #include "Adafruit_SSD1306.h"
 #include "appfonts/SFCompactTextS8B8.h"
+#include "Adafruit_GFX.h"
 
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
@@ -28,11 +30,11 @@ void Display::setup()
         device.display();
         delay(2000);
         device.clearDisplay();
-        
+
         setDisplayFont(&SFCompactText8pt8b);
         device.setTextWrap(false);
         device.setTextColor(SSD1306_WHITE);
-        
+
         changed = true;
     }
 }
@@ -43,6 +45,7 @@ void Display::setDisplayFont(const GFXfont *font)
     memcpy_P(&fontData, font, sizeof(GFXfont));
     device.setFont(font);
     maxlines = DISPLAY_HEIGHT / fontData.yAdvance + 1;
+    spaceWidth = calcTextWidth(" ", 0);
 }
 
 void Display::loop()
@@ -84,6 +87,53 @@ bool Display::printto(uint8_t line, const char *text, ...)
     {
         return false;
     }
+}
+
+uint16_t Display::printwrap(uint8_t lineStart, const char *text)
+//****************************************************************************************
+{
+    char buf[sizeof(text)];
+    strcpy(buf, text);
+    char *ptr = strtok(buf, " ");
+    uint16_t xpos = 0;
+    uint16_t cur = 0;
+
+    while (ptr != NULL)
+    {
+        //increasing the cursor by one to indicate the delimiter between words
+        //do this here because if the next word is already going beyond the display the
+        //space should be already taken into account
+        cur++;
+
+        uint16_t w = calcTextWidth(ptr, xpos);
+        if ((xpos + w) > device.width())
+        {
+            ++lineStart;
+            if (lineStart > maxlines)
+                break;
+            xpos = 0;
+        }
+
+        device.setCursor(xpos, (lineStart - 1) * fontData.yAdvance + fontData.yAdvance / 2);
+        device.print(ptr);
+        xpos += w + spaceWidth;
+
+        cur += strlen(ptr);
+        ptr = strtok(NULL, " ");
+    }
+
+    //return the cursor - 1 as we have initially added a space also after the last word
+    return --cur;
+}
+
+uint16_t Display::calcTextWidth(const char *text, uint16_t xpos)
+//****************************************************************************************
+{
+    int16_t x1, y1;
+    uint16_t w, h;
+    
+    device.getTextBounds(text, xpos, 0, &x1, &y1, &w, &h);
+    return w;
 }
 
 Display display;

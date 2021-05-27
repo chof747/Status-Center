@@ -12,6 +12,7 @@ class Display: public Component
         void loop();
         
         bool printto(uint8_t line, const char* text, ...);
+        uint16_t printwrap(uint8_t lineStart, const char* text);
         uint8_t getMaxLines();
         void setDisplayFont(const GFXfont* font);
         void clear();
@@ -20,6 +21,9 @@ class Display: public Component
         bool changed;
         GFXfont fontData;
         uint8_t maxlines;
+        uint16_t spaceWidth;
+
+        uint16_t calcTextWidth(const char* text, uint16_t xpos);
 };
 
 extern Display display;
