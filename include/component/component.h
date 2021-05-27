@@ -8,6 +8,8 @@ class Component
         virtual void setup() = 0;
         virtual void loop()  = 0;
 
+        virtual bool powerOnTest() { return true; }
+
 };
 
 #endif //COMPONENT_G

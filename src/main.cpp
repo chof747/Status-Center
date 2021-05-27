@@ -8,6 +8,7 @@
 
 #include "controller/base.h"
 #include "controller/idle_controller.h"
+#include "controller/message_controller.h"
 
 #define MAX_COMPONENTS  5
 
@@ -21,6 +22,7 @@ void onNextController(ControllerBase* active)
 }
 
 IdleController idle(&buttonControls, &onNextController);
+MessageController message(&buttonControls, &onNextController);
 
 void setup() 
 //****************************************************************************************
@@ -36,8 +38,14 @@ void setup()
 
   for(int i=0;i<MAX_COMPONENTS;++i)
   {
-    components[i]->setup();
+    if (components[i]->powerOnTest())
+    {
+      components[i]->setup();
+    }
   }
+
+  idle.setNext(&message);
+  message.setNext(&idle);
 
   activeController = &idle;
   activeController->activate();
