@@ -9,7 +9,7 @@ Logger::Logger(int logLevel)
     this->logLevel = logLevel;
     if (Logger::NONE != logLevel)
     {
-        Serial.begin(9600); 
+        Serial.begin(115200); 
     }
 }
 
