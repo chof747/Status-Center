@@ -45,7 +45,8 @@ void Display::setDisplayFont(const GFXfont *font)
     memcpy_P(&fontData, font, sizeof(GFXfont));
     device.setFont(font);
     maxlines = DISPLAY_HEIGHT / fontData.yAdvance + 1;
-    spaceWidth = calcTextWidth(" ", 0);
+    spaceWidth = calcTextWidth("  ", 0); 
+    Log.debug(MODULE, "spacewidth = %d", spaceWidth);
 }
 
 void Display::loop()
@@ -92,7 +93,7 @@ bool Display::printto(uint8_t line, const char *text, ...)
 uint16_t Display::printwrap(uint8_t lineStart, const char *text)
 //****************************************************************************************
 {
-    char buf[sizeof(text)];
+    char buf[strlen(text)+1];
     strcpy(buf, text);
     char *ptr = strtok(buf, " ");
     uint16_t xpos = 0;
@@ -105,6 +106,7 @@ uint16_t Display::printwrap(uint8_t lineStart, const char *text)
         //space should be already taken into account
         cur++;
 
+
         uint16_t w = calcTextWidth(ptr, xpos);
         if ((xpos + w) > device.width())
         {
@@ -116,7 +118,7 @@ uint16_t Display::printwrap(uint8_t lineStart, const char *text)
 
         device.setCursor(xpos, (lineStart - 1) * fontData.yAdvance + fontData.yAdvance / 2);
         device.print(ptr);
-        xpos += w + spaceWidth;
+        xpos += (w + spaceWidth);
 
         cur += strlen(ptr);
         ptr = strtok(NULL, " ");
@@ -133,7 +135,7 @@ uint16_t Display::calcTextWidth(const char *text, uint16_t xpos)
     uint16_t w, h;
     
     device.getTextBounds(text, xpos, 0, &x1, &y1, &w, &h);
-    return w;
+    return w * 1;
 }
 
 Display display;
