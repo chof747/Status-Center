@@ -10,6 +10,7 @@
 
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
+#define GROUND_LINE (line - 1) * fontData.yAdvance + fontData.yAdvance / 2 + 1
 
 Adafruit_SSD1306 device = Adafruit_SSD1306(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, -1);
 
@@ -78,7 +79,7 @@ bool Display::printto(uint8_t line, const char *text, ...)
 
     if (line > 0 && line <= maxlines)
     {
-        device.setCursor(0, (line - 1) * fontData.yAdvance + fontData.yAdvance / 2);
+        device.setCursor(0, GROUND_LINE);
         device.print(buffer);
         Log.info(MODULE, "Putting \"%s\" to line %d", buffer, line);
         changed = true;
@@ -90,7 +91,19 @@ bool Display::printto(uint8_t line, const char *text, ...)
     }
 }
 
-uint16_t Display::printwrap(uint8_t lineStart, const char *text)
+bool Display::printtoinv(uint8_t line, const char *text)
+//****************************************************************************************
+{
+    bool result = false;
+    device.fillRect(0, (line - 1) * fontData.yAdvance, device.width(), line * fontData.yAdvance * 3 / 4 + 1, SSD1306_WHITE);
+    device.setTextColor(SSD1306_BLACK);
+    result = printto(line, text);
+    device.setTextColor(SSD1306_WHITE);
+
+    return result;
+}
+
+uint16_t Display::printwrap(uint8_t line, const char *text)
 //****************************************************************************************
 {
     char buf[strlen(text)+1];
@@ -110,13 +123,13 @@ uint16_t Display::printwrap(uint8_t lineStart, const char *text)
         uint16_t w = calcTextWidth(ptr, xpos);
         if ((xpos + w) > device.width())
         {
-            ++lineStart;
-            if (lineStart > maxlines)
+            ++line;
+            if (line > maxlines)
                 break;
             xpos = 0;
         }
 
-        device.setCursor(xpos, (lineStart - 1) * fontData.yAdvance + fontData.yAdvance / 2);
+        device.setCursor(xpos, GROUND_LINE);
         device.print(ptr);
         xpos += (w + spaceWidth);
 

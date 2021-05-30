@@ -27,7 +27,7 @@ void MessageController::loop()
 {
     if (0 != msg.title.compareTo(""))
     {
-        display.printto(1, msg.title.c_str());
+        display.printtoinv(1, msg.title.c_str());
         display.printwrap(2, msg.message.c_str());
         msg = EMPTY_MSG;
     }
