@@ -28,8 +28,6 @@ void Display::setup()
     {
         Log.info(MODULE, "Display initialized");
         device.ssd1306_command(SSD1306_DISPLAYON);
-        device.display();
-        delay(2000);
         device.clearDisplay();
 
         setDisplayFont(&SFCompactText8pt8b);
