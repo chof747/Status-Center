@@ -2,6 +2,7 @@
 #include <ESP8266WiFi.h>
 #include "config.h"
 #include "logger.h"
+#include "component/status_indicator.h"
 
 #define MODULE "WIFI"
 
@@ -22,6 +23,8 @@ void WifiManager::setup()
 
     Log.info(MODULE, "Connection established.");
     Log.info(MODULE, "IP address: %s", WiFi.localIP().toString().c_str());
+    statusIndicator.switchAllOff();
+    statusIndicator.turnOn(StatusIndicator::LED_INDICAT);
 }
 
 void WifiManager::loop() 

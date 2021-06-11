@@ -33,9 +33,9 @@ void setup()
   // put your setup code here, to run once:
   Log.info("MAIN", "Starting");
 
-  components[0] = &wifiManager;
-  components[1] = &mqttClient;
-  components[2] = &statusIndicator;
+  components[0] = &statusIndicator;
+  components[1] = &wifiManager;
+  components[2] = &mqttClient;
   components[3] = &display;
   components[4] = &buttonControls;
 

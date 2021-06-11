@@ -1,5 +1,6 @@
 #include "component/mqtt.h"
 #include "component/wifi.h"
+#include "component/status_indicator.h"
 #include <ESP8266WiFi.h> // ESP8266 WiFi driver
 #include "logger.h"
 
@@ -112,6 +113,9 @@ bool MqttClient::reconnect()
             {
                 Log.info(MODULE, "connected to %s", MQTT_BROKER);
                 stat("status", "connected");
+                statusIndicator.switchAllOff();
+                statusIndicator.turnOn(StatusIndicator::LED_NOMINAL);
+
             }
             else
             {
