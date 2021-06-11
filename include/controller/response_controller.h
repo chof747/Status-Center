@@ -17,6 +17,7 @@ class ResponseController: public ControllerBase, ButtonController
     void loop();
 
     void onClick(uint8_t state);
+    void onLongPress(uint8_t state);
 
     private:
 

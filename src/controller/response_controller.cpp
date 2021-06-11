@@ -62,6 +62,15 @@ void ResponseController::onClick(uint8_t state)
 
 }
 
+void ResponseController::onLongPress(uint8_t state)
+//*********************************************************************************
+{
+    if (ButtonControls::BTN_DOWN == state)
+    {
+        gotoNext();
+    }
+}
+
 void ResponseController::displayNextResponse()
 //*********************************************************************************
 {
