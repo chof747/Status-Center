@@ -97,7 +97,7 @@ bool Display::printtoinv(uint8_t line, const char *text)
     device.setTextColor(SSD1306_BLACK);
     result = printto(line, text);
     device.setTextColor(SSD1306_WHITE);
-    changed = true;
+    
     return result;
 }
 
