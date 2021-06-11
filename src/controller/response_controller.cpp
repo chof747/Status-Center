@@ -3,6 +3,7 @@
 #include "logger.h"
 
 #include "component/display.h"
+#include "component/status_indicator.h"
 
 #define MODULE "RESP_CTRL"
 
@@ -46,6 +47,7 @@ void ResponseController::onClick(uint8_t state)
     {
         case ButtonControls::BTN_ACCEPT:
         //api.accept();  
+        statusIndicator.switchIndicator(true, 1);
         gotoNext();
         break;  
 
