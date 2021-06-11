@@ -97,7 +97,7 @@ bool Display::printtoinv(uint8_t line, const char *text)
     device.setTextColor(SSD1306_BLACK);
     result = printto(line, text);
     device.setTextColor(SSD1306_WHITE);
-
+    changed = true;
     return result;
 }
 
@@ -134,7 +134,7 @@ uint16_t Display::printwrap(uint8_t line, const char *text)
         cur += strlen(ptr);
         ptr = strtok(NULL, " ");
     }
-
+    changed = true;
     //return the cursor - 1 as we have initially added a space also after the last word
     return --cur;
 }
