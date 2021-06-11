@@ -26,6 +26,8 @@ void StatusIndicator::setup()
 
     stateStart = 0;
     stateDuration = 0;
+    indicationStart = 0;
+    indicationDuration = 0;
     turnOn(StatusIndicator::LED_CRITICAL);
 }
 
@@ -37,6 +39,13 @@ void StatusIndicator::loop()
         switchState(STANDARD_STATE);
         stateStart = 0;
         stateDuration = 0;
+    }
+
+    if ((0 != indicationDuration) && (indicationDuration < (millis() - indicationStart) / 1000 ))
+    {
+        switchIndicator(false);
+        indicationStart = 0;
+        indicationDuration = 0;
     }
 }
 
@@ -66,6 +75,13 @@ void StatusIndicator::switchIndicator(bool enable)
     digitalWrite(StatusIndicator::LED_INDICAT, (enable) ? HIGH : LOW);
 }
 
+void StatusIndicator::switchIndicator(bool enable, unsigned long duration)
+//****************************************************************************************
+{
+    digitalWrite(StatusIndicator::LED_INDICAT, (enable) ? HIGH : LOW);
+    indicationStart = millis();
+    indicationDuration = duration;
+}
 void StatusIndicator::switchAllOff()
 //****************************************************************************************
 {

@@ -21,6 +21,7 @@ class StatusIndicator: public Component, MqttSubscriber
         void loop();
 
         void switchIndicator(bool enable);
+        void switchIndicator(bool enable, unsigned long duration);
         void switchAllOff();
         void turnOn(const int led);
         void turnOff(const int led);
@@ -30,6 +31,9 @@ class StatusIndicator: public Component, MqttSubscriber
 
         unsigned long stateStart;
         unsigned long stateDuration;
+
+        unsigned long indicationStart;
+        unsigned long indicationDuration;
 
         void handleStatusIndicatorMessage(String message);
         void switchState(const char* status);
