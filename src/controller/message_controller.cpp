@@ -1,14 +1,15 @@
 #include "controller/message_controller.h"
+#include "controller/response_controller.h"
 #include "component/button_controls.h"
 #include "logger.h"
-
 #include "component/display.h"
+
 
 #define MODULE "MSG_CTRL"
 
 
-MessageController::MessageController(ButtonControls* buttons, activation_cb_t cb)
-:ControllerBase(cb), ButtonController(buttons), api(MESSAGE_API_ENDPOINT), msg(EMPTY_MSG)
+MessageController::MessageController(ButtonControls* buttons, ResponseController* responding, activation_cb_t cb)
+:ControllerBase(cb), ButtonController(buttons), responding(responding), api(MESSAGE_API_ENDPOINT), msg(EMPTY_MSG)
 //*********************************************************************************
 {
     
@@ -19,7 +20,7 @@ void MessageController::activate()
 {
     Log.debug(MODULE, "Message Controller activated");
     attach();
-    msg = api.first();
+    msg = api.firstMessage();
 }
 
 void MessageController::loop()
@@ -36,11 +37,16 @@ void MessageController::loop()
 void MessageController::onClick(uint8_t state)
 //*********************************************************************************
 {
-    switch(state)
+   Log.debug(MODULE, "CLick detected!");
+   switch(state)
     {
         case ButtonControls::BTN_ACCEPT:
-        api.accept();  
-        displayNextMessage();
+        if (api.hasResponseOptions()) {
+            responding->setApi(&api);
+            gotoAlternateNext();
+        } else {
+
+        }
         break;  
 
         case ButtonControls::BTN_UP:
@@ -67,7 +73,7 @@ void MessageController::displayNextMessage()
 //*********************************************************************************
 {
     Log.debug(MODULE, "Displaying next message");
-    msg = api.next();
+    msg = api.nextMessage();
 
 }
 
@@ -75,5 +81,5 @@ void MessageController::displayPrevMessage()
 //*********************************************************************************
 {
     Log.debug(MODULE, "Displaying previous message");
-    msg = api.prev();
+    msg = api.prevMessage();
 }

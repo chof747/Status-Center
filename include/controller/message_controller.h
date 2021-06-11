@@ -6,11 +6,13 @@
 #include <String.h>
 #include "./message/message_api.h"
 
+class ResponseController;
+
 class MessageController: public ControllerBase, ButtonController
 {
     public:
 
-    MessageController(ButtonControls* buttons, activation_cb_t cb);
+    MessageController(ButtonControls* buttons, ResponseController* responding, activation_cb_t cb);
     void activate();
     void loop();
 
@@ -19,6 +21,7 @@ class MessageController: public ControllerBase, ButtonController
 
     private:
 
+    ResponseController* responding;
     MessageApi api;
     message_t msg;
     void displayNextMessage();

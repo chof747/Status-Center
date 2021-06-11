@@ -9,6 +9,7 @@
 #include "controller/base.h"
 #include "controller/idle_controller.h"
 #include "controller/message_controller.h"
+#include "controller/response_controller.h"
 
 #define MAX_COMPONENTS  5
 
@@ -17,12 +18,14 @@ Component* components[MAX_COMPONENTS];
 ControllerBase* activeController = NULL;
 
 void onNextController(ControllerBase* active)
+//****************************************************************************************
 {
   activeController = active;
 }
 
 IdleController idle(&buttonControls, &onNextController);
-MessageController message(&buttonControls, &onNextController);
+ResponseController response(&buttonControls, &onNextController);
+MessageController message(&buttonControls, &response, &onNextController);
 
 void setup() 
 //****************************************************************************************
@@ -46,6 +49,8 @@ void setup()
 
   idle.setNext(&message);
   message.setNext(&idle);
+  message.setAlternateNext(&response);
+  response.setNext(&message);
 
   activeController = &idle;
   activeController->activate();
