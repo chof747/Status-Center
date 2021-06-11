@@ -9,6 +9,11 @@ class StatusIndicator: public Component, MqttSubscriber
 {
     public:
 
+        static const int LED_CRITICAL = D0;
+        static const int LED_WARNING  = D5;
+        static const int LED_NOMINAL  = D6;
+        static const int LED_INDICAT  = D7;
+
         void onMessage(String topic, String payload);
         callback_t getCallback();
         
@@ -16,12 +21,12 @@ class StatusIndicator: public Component, MqttSubscriber
         void loop();
 
         void switchIndicator(bool enable);
+        void switchAllOff();
+        void turnOn(const int led);
+        void turnOff(const int led);
+        void toggle(const int led);
 
     private:
-        static const int LED_CRITICAL = D0;
-        static const int LED_WARNING  = D5;
-        static const int LED_NOMINAL  = D6;
-        static const int LED_INDICAT  = D7;
 
         unsigned long stateStart;
         unsigned long stateDuration;

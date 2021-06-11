@@ -26,7 +26,7 @@ void StatusIndicator::setup()
 
     stateStart = 0;
     stateDuration = 0;
-    switchState(STANDARD_STATE);
+    turnOn(StatusIndicator::LED_CRITICAL);
 }
 
 void StatusIndicator::loop()
@@ -64,6 +64,33 @@ void StatusIndicator::switchIndicator(bool enable)
 //****************************************************************************************
 {
     digitalWrite(StatusIndicator::LED_INDICAT, (enable) ? HIGH : LOW);
+}
+
+void StatusIndicator::switchAllOff()
+//****************************************************************************************
+{
+    digitalWrite(StatusIndicator::LED_CRITICAL, LOW);
+    digitalWrite(StatusIndicator::LED_WARNING, LOW);
+    digitalWrite(StatusIndicator::LED_NOMINAL, LOW);
+    digitalWrite(StatusIndicator::LED_INDICAT, LOW);
+}
+
+void StatusIndicator::turnOn(const int led)
+//****************************************************************************************
+{
+    digitalWrite(led, HIGH);
+}
+
+void StatusIndicator::turnOff(const int led)
+//****************************************************************************************
+{
+    digitalWrite(led, LOW);
+}
+
+void StatusIndicator::toggle(const int led)
+//****************************************************************************************
+{
+    digitalWrite(led, !digitalRead(led));
 }
 
 void StatusIndicator::handleStatusIndicatorMessage(String message)
