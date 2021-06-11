@@ -31,6 +31,6 @@ void ControllerBase::gotoAlternateNext()
     if (NULL != alternateNext)
     {
         alternateNext->activate();
-        activationCallBack(next);
+        activationCallBack(alternateNext);
     }
 }
