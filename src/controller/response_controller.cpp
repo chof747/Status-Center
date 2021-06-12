@@ -67,6 +67,13 @@ void ResponseController::onLongPress(uint8_t state)
 {
     if (ButtonControls::BTN_DOWN == state)
     {
+        Log.info(MODULE, "Do not accept message - returning to controller");
+        gotoNext();
+    }
+
+    if (ButtonControls::BTN_ACCEPT == state)
+    {
+        api->acceptMessage();
         gotoNext();
     }
 }

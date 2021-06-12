@@ -26,7 +26,9 @@ bool MessageApi::acceptMessage(String responseId)
 bool MessageApi::acceptMessage()
 //*********************************************************************************
 {
-    return true;
+    char url[255];
+    sprintf(url, "%s/accept/%s", this->endpoint.c_str(), (const char *)message["id"]);
+    return accept(url);
 }
 
 message_t MessageApi::firstMessage()
@@ -177,4 +179,21 @@ response_t MessageApi::getCurrentResponse()
                      ? (const char*) r["label"]
                      : NULL
     };
+}
+
+bool MessageApi::accept(const char* url)
+//*********************************************************************************
+{
+    http.begin(client, url);
+    int rc = http.POST(String(""));
+
+    if (200 == rc)
+    {
+        return true;
+    } 
+    else
+    {
+        Log.error(MODULE, "Received return code %d with message %s", rc, http.getString());
+        return false;
+    }
 }

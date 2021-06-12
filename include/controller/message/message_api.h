@@ -44,6 +44,7 @@ class MessageApi
     int responseIndex;
 
     message_t get(const char* url);
+    bool accept(const char* url);
     response_t getCurrentResponse();
 
 };
