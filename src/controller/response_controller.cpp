@@ -8,15 +8,14 @@
 #define MODULE "RESP_CTRL"
 
 #ifndef ACTION_HEADER
-  #define ACTION_HEADER "Possible Fix"
+#define ACTION_HEADER "Possible Fix"
 #endif
 
-
-ResponseController::ResponseController(ButtonControls* buttons, activation_cb_t cb)
-:ControllerBase(cb), ButtonController(buttons), api(NULL), response(EMPTY_RESPONSE)
+ResponseController::ResponseController(ButtonControls *buttons, activation_cb_t cb)
+    : ControllerBase(cb), ButtonController(buttons), 
+    api(NULL), response(EMPTY_RESPONSE), currentResponseId(NULL)
 //*********************************************************************************
 {
-    
 }
 
 void ResponseController::activate()
@@ -25,6 +24,7 @@ void ResponseController::activate()
     Log.debug(MODULE, "Response Controller activated");
     attach();
     response = api->firstResponse();
+    currentResponseId = response.id;
     Log.debug(MODULE, "id: %s, label: \"%s\"", response.id, response.label);
 }
 
@@ -37,29 +37,31 @@ void ResponseController::loop()
         display.printwrap(2, response.label);
         response = EMPTY_RESPONSE;
     }
-
 }
 
 void ResponseController::onClick(uint8_t state)
 //*********************************************************************************
 {
-    switch(state)
+    switch (state)
     {
-        case ButtonControls::BTN_ACCEPT:
-        //api.accept();  
+    case ButtonControls::BTN_ACCEPT:
+        if (NULL != currentResponseId) {
+            api->acceptMessage(currentResponseId);
+        } else {
+            api->acceptMessage();
+        }
         statusIndicator.switchIndicator(true, 1);
         gotoNext();
-        break;  
+        break;
 
-        case ButtonControls::BTN_UP:
+    case ButtonControls::BTN_UP:
         displayPrevResponse();
         break;
 
-        case ButtonControls::BTN_DOWN:
+    case ButtonControls::BTN_DOWN:
         displayNextResponse();
         break;
     }
-
 }
 
 void ResponseController::onLongPress(uint8_t state)
@@ -74,6 +76,7 @@ void ResponseController::onLongPress(uint8_t state)
     if (ButtonControls::BTN_ACCEPT == state)
     {
         api->acceptMessage();
+        statusIndicator.switchIndicator(true, 1);
         gotoNext();
     }
 }
@@ -83,7 +86,7 @@ void ResponseController::displayNextResponse()
 {
     Log.debug(MODULE, "Displaying next response");
     response = api->nextResponse();
-
+    currentResponseId = response.id;
 }
 
 void ResponseController::displayPrevResponse()
@@ -91,4 +94,5 @@ void ResponseController::displayPrevResponse()
 {
     Log.debug(MODULE, "Displaying previous response");
     response = api->prevResponse();
+    currentResponseId = response.id;
 }

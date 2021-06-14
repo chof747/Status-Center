@@ -17,10 +17,12 @@ MessageApi::MessageApi(String endpoint) : message()
     this->responseIndex = 0;
 }
 
-bool MessageApi::acceptMessage(String responseId)
+bool MessageApi::acceptMessage(const char* responseId)
 //*********************************************************************************
 {
-    return true;
+    char url[255];
+    sprintf(url, "%s/accept/%s/%s", this->endpoint.c_str(), (const char *)message["id"], responseId);
+    return accept(url);
 }
 
 bool MessageApi::acceptMessage()

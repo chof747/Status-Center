@@ -26,7 +26,7 @@ class MessageApi
     //message functions
 
     bool acceptMessage();
-    bool acceptMessage(String responseId);
+    bool acceptMessage(const char* responseId);
     message_t firstMessage();
     message_t nextMessage();
     message_t prevMessage();

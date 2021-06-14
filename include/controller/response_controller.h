@@ -23,6 +23,7 @@ class ResponseController: public ControllerBase, ButtonController
 
     MessageApi *api;
     response_t response;
+    const char* currentResponseId;
     void displayNextResponse();
     void displayPrevResponse();
 };
