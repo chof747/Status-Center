@@ -11,9 +11,6 @@
 void StatusIndicator::setup()
 //****************************************************************************************
 {
-    mqttClient.subscribe("alarmcenter/statusindicator", getCallback());
-    mqttClient.subscribe("alarmcenter/indicator", getCallback());
-
     pinMode(StatusIndicator::LED_CRITICAL, OUTPUT);
     pinMode(StatusIndicator::LED_WARNING, OUTPUT);
     pinMode(StatusIndicator::LED_NOMINAL, OUTPUT);
@@ -29,6 +26,13 @@ void StatusIndicator::setup()
     indicationStart = 0;
     indicationDuration = 0;
     turnOn(StatusIndicator::LED_CRITICAL);
+}
+
+void StatusIndicator::afterSetup()
+//****************************************************************************************
+{
+    mqttClient.subscribe("alarmcenter/statusindicator", getCallback());
+    mqttClient.subscribe("alarmcenter/indicator", getCallback());
 }
 
 void StatusIndicator::loop()

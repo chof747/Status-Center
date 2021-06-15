@@ -18,6 +18,7 @@ class StatusIndicator: public Component, MqttSubscriber
         callback_t getCallback();
         
         void setup();
+        void afterSetup();
         void loop();
 
         void switchIndicator(bool enable);

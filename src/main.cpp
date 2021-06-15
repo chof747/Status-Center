@@ -47,6 +47,11 @@ void setup()
     }
   }
 
+  for(int i=0;i<MAX_COMPONENTS;++i)
+  {
+    components[i]->afterSetup();
+  }
+
   idle.setNext(&message);
   message.setNext(&idle);
   message.setAlternateNext(&response);
