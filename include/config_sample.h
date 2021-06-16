@@ -11,5 +11,9 @@
 
 #define MQTT_SUBSCRIPTIONS 2
 
+#ifndef CONTROLLER_TIMEOUT 
+    #define CONTROLLER_TIMEOUT 30000
+#endif
+
 
 #endif //CONFIG_H
