@@ -3,13 +3,15 @@
 #include "component/button_controls.h"
 #include "logger.h"
 #include "component/display.h"
+#include "config.h"
 
 
 #define MODULE "MSG_CTRL"
 
 
-MessageController::MessageController(ButtonControls* buttons, ResponseController* responding, activation_cb_t cb)
-:ControllerBase(cb), ButtonController(buttons), responding(responding), api(MESSAGE_API_ENDPOINT), msg(EMPTY_MSG)
+MessageController::MessageController(ButtonControls* buttons, ResponseController* responding, ControllerBase* timeout, activation_cb_t cb)
+:ControllerBase(cb), ButtonController(buttons), TimeOutController(CONTROLLER_TIMEOUT),
+responding(responding), timeoutTarget(timeout), api(MESSAGE_API_ENDPOINT), msg(EMPTY_MSG)
 //*********************************************************************************
 {
     
@@ -20,6 +22,7 @@ void MessageController::activate()
 {
     Log.debug(MODULE, "Message Controller activated");
     attach();
+    restartTimer();
     msg = api.firstMessage();
 }
 
@@ -32,11 +35,17 @@ void MessageController::loop()
         display.printwrap(2, msg.message.c_str());
         msg = EMPTY_MSG;
     }
+
+    if (checkTimeForTimeOut()) 
+    {
+        gotoController(timeoutTarget);
+    }
 }
 
 void MessageController::onClick(uint8_t state)
 //*********************************************************************************
 {
+   restartTimer();
    switch(state)
     {
         case ButtonControls::BTN_ACCEPT:
@@ -63,6 +72,7 @@ void MessageController::onClick(uint8_t state)
 void MessageController::onLongPress(uint8_t state)
 //*********************************************************************************
 {
+    restartTimer();
     if (ButtonControls::BTN_ACCEPT == state)
     {
         gotoNext();

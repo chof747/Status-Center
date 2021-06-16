@@ -25,7 +25,7 @@ void onNextController(ControllerBase* active)
 
 IdleController idle(&buttonControls, &onNextController);
 ResponseController response(&buttonControls, &onNextController);
-MessageController message(&buttonControls, &response, &onNextController);
+MessageController message(&buttonControls, &response, &idle, &onNextController);
 
 void setup() 
 //****************************************************************************************

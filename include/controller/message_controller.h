@@ -3,16 +3,17 @@
 
 #include "./base.h"
 #include "./button_controller.h"
+#include "./timeout_controller.h"
 #include <String.h>
 #include "./message/message_api.h"
 
 class ResponseController;
 
-class MessageController: public ControllerBase, ButtonController
+class MessageController: public ControllerBase, ButtonController, TimeOutController
 {
     public:
 
-    MessageController(ButtonControls* buttons, ResponseController* responding, activation_cb_t cb);
+    MessageController(ButtonControls* buttons, ResponseController* responding, ControllerBase* timeout, activation_cb_t cb);
     void activate();
     void loop();
 
@@ -22,6 +23,7 @@ class MessageController: public ControllerBase, ButtonController
     private:
 
     ResponseController* responding;
+    ControllerBase* timeoutTarget;
     MessageApi api;
     message_t msg;
     void displayNextMessage();
