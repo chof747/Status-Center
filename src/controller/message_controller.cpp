@@ -37,7 +37,6 @@ void MessageController::loop()
 void MessageController::onClick(uint8_t state)
 //*********************************************************************************
 {
-   Log.debug(MODULE, "CLick detected!");
    switch(state)
     {
         case ButtonControls::BTN_ACCEPT:
@@ -45,7 +44,8 @@ void MessageController::onClick(uint8_t state)
             responding->setApi(&api);
             gotoAlternateNext();
         } else {
-
+            api.acceptMessage();
+            msg = api.firstMessage();
         }
         break;  
 
