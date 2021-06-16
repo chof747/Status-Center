@@ -24,6 +24,7 @@ class ControllerBase
 
     void gotoNext();
     void gotoAlternateNext();
+    void gotoController(ControllerBase* controller);
 
     private:
 

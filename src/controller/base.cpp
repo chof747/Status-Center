@@ -18,19 +18,21 @@ void ControllerBase::setAlternateNext(ControllerBase* c)
 void ControllerBase::gotoNext()
 //****************************************************************************************
 {
-    if (NULL != next)
-    {
-        next->activate();
-        activationCallBack(next);
-    }
+    gotoController(next);
 }
 
 void ControllerBase::gotoAlternateNext()
 //****************************************************************************************
 {
-    if (NULL != alternateNext)
+    gotoController(alternateNext);
+}
+
+void ControllerBase::gotoController(ControllerBase* controller)
+//****************************************************************************************
+{
+    if (NULL != controller)
     {
-        alternateNext->activate();
-        activationCallBack(alternateNext);
+        controller->activate();
+        activationCallBack(controller);
     }
 }
