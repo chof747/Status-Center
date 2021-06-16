@@ -5,13 +5,14 @@
 #include "component/status_indicator.h"
 #include "component/button_controls.h"
 #include "component/display.h"
+#include "component/ota.h"
 
 #include "controller/base.h"
 #include "controller/idle_controller.h"
 #include "controller/message_controller.h"
 #include "controller/response_controller.h"
 
-#define MAX_COMPONENTS  5
+#define MAX_COMPONENTS  6
 
 Component* components[MAX_COMPONENTS];
 
@@ -35,9 +36,10 @@ void setup()
 
   components[0] = &statusIndicator;
   components[1] = &wifiManager;
-  components[2] = &mqttClient;
-  components[3] = &display;
-  components[4] = &buttonControls;
+  components[2] = &ota;
+  components[3] = &mqttClient;
+  components[4] = &display;
+  components[5] = &buttonControls;
 
   for(int i=0;i<MAX_COMPONENTS;++i)
   {
