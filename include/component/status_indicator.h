@@ -9,10 +9,10 @@ class StatusIndicator: public Component, MqttSubscriber
 {
     public:
 
-        static const int LED_CRITICAL = D0;
-        static const int LED_WARNING  = D5;
-        static const int LED_NOMINAL  = D6;
-        static const int LED_INDICAT  = D7;
+        static const int LED_CRITICAL = D5;
+        static const int LED_WARNING  = D6;
+        static const int LED_NOMINAL  = D7;
+        static const int LED_INDICAT  = D0;
 
         void onMessage(String topic, String payload);
         callback_t getCallback();
