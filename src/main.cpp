@@ -11,6 +11,7 @@
 #include "controller/idle_controller.h"
 #include "controller/message_controller.h"
 #include "controller/response_controller.h"
+#include "controller/device_data_controller.h"
 
 #define MAX_COMPONENTS  6
 
@@ -27,6 +28,7 @@ void onNextController(ControllerBase* active)
 IdleController idle(&buttonControls, &onNextController);
 ResponseController response(&buttonControls, &onNextController);
 MessageController message(&buttonControls, &response, &idle, &onNextController);
+DeviceDataController deviceData(&buttonControls, &idle, &onNextController);
 
 void setup() 
 //****************************************************************************************
@@ -55,9 +57,10 @@ void setup()
   }
 
   idle.setNext(&message);
-  message.setNext(&idle);
+  message.setNext(&deviceData);
   message.setAlternateNext(&response);
   response.setNext(&message);
+  deviceData.setNext(&idle);
 
   activeController = &idle;
   activeController->activate();
