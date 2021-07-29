@@ -5,8 +5,8 @@
 #define MODULE "BUTTONS"
 
 #define DEBOUNCE_TIME 20
-#define LONG_PRESS_TIME 1000
-#define DBL_CLICK_TIME 110
+#define LONG_PRESS_TIME 500
+#define DBL_CLICK_TIME 150
 
 void ButtonControls::setup()
 //*********************************************************************************
@@ -35,21 +35,23 @@ void ButtonControls::loop()
 //*********************************************************************************
 {
   uint8_t newState = readButtons();
-  if (newState != state)
+  long t = millis();
+  
+  if ((newState != state) && (DEBOUNCE_TIME < (t - eventTime)))
   {
-    //Log.debug(MODULE, "New State detected: %02X (old was %02X) at %d", newState, state, millis());
+    Log.debug(MODULE, "New State detected: %02X (old was %02X) at %d", newState, state, t);
     if (newState > state)
     {
       //button has been pressed start 
-      eventTime = millis();
+      eventTime = t;
       state = newState;
       eventState = state;
     }  
     else if (newState == 0)
     {
       //release
-      unsigned long pressTime = millis() - eventTime;
-      //Log.debug(MODULE,"Click counter before = %d", clicks);
+      unsigned long pressTime = t - eventTime;
+      Log.debug(MODULE,"Click counter before = %d", clicks);
       clicks += 1;
 
       if (LONG_PRESS_TIME <= pressTime)
@@ -57,28 +59,29 @@ void ButtonControls::loop()
         eventTime = 0;
         longPress = true;
       }
-      else if ((LONG_PRESS_TIME > pressTime) && (DEBOUNCE_TIME <= pressTime))
+      else
       {
         longPress = false;
-        eventTime = (clicks > 1) ? 0 : millis();
-      }
-      else 
-      {
-        //debouncing
+        eventTime = (clicks > 1) ? 0 : t;
       }
 
       state = newState;
-      //Log.debug(MODULE,"Click counter after = %d", clicks);
+      Log.debug(MODULE,"Click counter after = %d", clicks);
     }
+    else
+    {
+      eventTime = t;
+    }
+
   }
 
-  //  Log.debug(MODULE, "Time passed since last %02X click = %d", eventState, (millis() - eventTime));
+  //Log.debug(MODULE, "Time passed since last %02X click = %d", eventState, (millis() - eventTime));
 
-  if ((DBL_CLICK_TIME < (millis() - eventTime)) && (clicks > 0))
+  if ((DBL_CLICK_TIME < (t - eventTime)) && (clicks > 0))
   {
       if (longPress)
       {
-        Log.debug(MODULE, "Long press of button state x%02X", eventState);
+        Log.debug(MODULE, "\033[32mLong press of button state x%02X\033[39m", eventState);
         if (controller != NULL)
         {
           controller->onLongPress(eventState);
@@ -86,7 +89,7 @@ void ButtonControls::loop()
       }
       else if (2 == clicks)
       {
-        Log.debug(MODULE, "Double Click of button state x%02X", eventState);
+        Log.debug(MODULE, "\033[32mDouble Click of button state x%02X\033[39m", eventState);
         if (controller != NULL)
         {
           controller->onDblClick(eventState);
@@ -94,7 +97,7 @@ void ButtonControls::loop()
       }
       else 
       {
-        Log.debug(MODULE, "Click of button state x%02X", eventState);
+        Log.debug(MODULE, "\033[32mClick of button state x%02X\033[39m", eventState);
         if (controller != NULL)
         {
           controller->onClick(eventState);

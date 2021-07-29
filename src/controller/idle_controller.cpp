@@ -29,5 +29,5 @@ void IdleController::loop()
 void IdleController::onClick(uint8_t state)
 //*********************************************************************************
 {
-    gotoNext();
+  if (ButtonControls::BTN_ACCEPT == state) gotoNext();
 }
