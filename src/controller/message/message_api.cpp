@@ -130,6 +130,7 @@ message_t MessageApi::get(const char *url)
 //*********************************************************************************
 {
     message_t result = EMPTY_MSG;
+    Log.debug(MODULE, "URL: %s", url);
 
     http.begin(client, url);
     int rc = http.GET();
