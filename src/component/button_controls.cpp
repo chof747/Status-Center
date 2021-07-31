@@ -15,15 +15,15 @@ void ButtonControls::setup()
 
   pinMode(ButtonControls::PIN_ACCEPT, INPUT);
   digitalWrite(ButtonControls::PIN_ACCEPT, LOW);
-  Log.debug(MODULE, "Defined Accept Button on GPIO %d", ButtonControls::PIN_ACCEPT);
+  Log.info(MODULE, "Defined Accept Button on GPIO %d", ButtonControls::PIN_ACCEPT);
   
   pinMode(ButtonControls::PIN_UP, INPUT_PULLUP);
   digitalWrite(ButtonControls::PIN_UP, HIGH);
-  Log.debug(MODULE, "Defined Up Button on GPIO %d", ButtonControls::PIN_UP);
+  Log.info(MODULE, "Defined Up Button on GPIO %d", ButtonControls::PIN_UP);
   
   pinMode(ButtonControls::PIN_DOWN, INPUT_PULLUP);
   digitalWrite(ButtonControls::PIN_DOWN, HIGH);
-  Log.debug(MODULE, "Defined Down Button on GPIO %d", ButtonControls::PIN_DOWN);
+  Log.info(MODULE, "Defined Down Button on GPIO %d", ButtonControls::PIN_DOWN);
   
   state = 0;  
   eventState = 0;
@@ -81,7 +81,7 @@ void ButtonControls::loop()
   {
       if (longPress)
       {
-        Log.debug(MODULE, "\033[32mLong press of button state x%02X\033[39m", eventState);
+        Log.info(MODULE, "\033[32mLong press of button state x%02X\033[39m", eventState);
         if (controller != NULL)
         {
           controller->onLongPress(eventState);
@@ -89,7 +89,7 @@ void ButtonControls::loop()
       }
       else if (2 == clicks)
       {
-        Log.debug(MODULE, "\033[32mDouble Click of button state x%02X\033[39m", eventState);
+        Log.info(MODULE, "\033[32mDouble Click of button state x%02X\033[39m", eventState);
         if (controller != NULL)
         {
           controller->onDblClick(eventState);
@@ -97,7 +97,7 @@ void ButtonControls::loop()
       }
       else 
       {
-        Log.debug(MODULE, "\033[32mClick of button state x%02X\033[39m", eventState);
+        Log.info(MODULE, "\033[32mClick of button state x%02X\033[39m", eventState);
         if (controller != NULL)
         {
           controller->onClick(eventState);
