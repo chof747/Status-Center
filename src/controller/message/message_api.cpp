@@ -51,7 +51,7 @@ message_t MessageApi::nextMessage()
     }
     else
     {
-        return EMPTY_MSG;
+        return firstMessage();
     }
 }
 
@@ -66,7 +66,7 @@ message_t MessageApi::prevMessage()
     }
     else
     {
-        return EMPTY_MSG;
+        return firstMessage();
     }
 }
 
