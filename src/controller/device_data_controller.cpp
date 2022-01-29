@@ -4,14 +4,16 @@
 #include "component/display.h"
 #include "config.h"
 #include <ESP8266WiFi.h>
+#include "component/mqtt.h"
 
 #define MODULE "MSG_CTRL"
-#define MAX_INDICES 5
+#define MAX_INDICES 6
 #define FIRMWARE_VERSION 1
 #define IP_ADDRESS 2
 #define MAC_ADDRESS 3
 #define WLAN_NAME 4
 #define DEVICE_ID 5
+#define MQTT_CLIENT_ID 6
 
 DeviceDataController::DeviceDataController(ButtonControls *buttons, ControllerBase *timeout, activation_cb_t cb)
     : ControllerBase(cb), ButtonController(buttons), TimeOutController(CONTROLLER_TIMEOUT), timeoutTarget(timeout),
@@ -95,5 +97,9 @@ void DeviceDataController::obtainDeviceData(uint8_t ix)
         label = "Name";
         value = DEVICE_NAME;
         break;
+
+    case MQTT_CLIENT_ID:
+        label = "MQTT Client Id";
+        value = mqttClient.getClientId();
     }
 }

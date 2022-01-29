@@ -41,6 +41,7 @@ class MessageApi
 
     String endpoint;
     StaticJsonDocument<384> message;
+    bool hasMessage;
     int responseIndex;
 
     message_t get(const char* url);

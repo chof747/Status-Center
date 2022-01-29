@@ -80,4 +80,6 @@ void loop()
   {
     activeController->loop();
   }
+
+  delay(10);
 }

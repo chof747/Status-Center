@@ -10,7 +10,7 @@ HTTPClient http;
 
 #define MODULE "MSG_API"
 
-MessageApi::MessageApi(String endpoint) : message()
+MessageApi::MessageApi(String endpoint) : message(), hasMessage(false)
 //*********************************************************************************
 {
     this->endpoint = endpoint;
@@ -43,7 +43,7 @@ message_t MessageApi::firstMessage()
 message_t MessageApi::nextMessage()
 //*********************************************************************************
 {
-    if (message.containsKey("id"))
+    if (hasMessage && (message.containsKey("id")))
     {
         char url[255];
         sprintf(url, "%s/%s&next", this->endpoint.c_str(), (const char *)message["id"]);
@@ -58,7 +58,7 @@ message_t MessageApi::nextMessage()
 message_t MessageApi::prevMessage()
 //*********************************************************************************
 {
-    if (message.containsKey("id"))
+    if (hasMessage && (message.containsKey("id")))
     {
         char url[255];
         sprintf(url, "%s/%s&prev", this->endpoint.c_str(), (const char *)message["id"]);
@@ -73,9 +73,9 @@ message_t MessageApi::prevMessage()
 bool MessageApi::hasResponseOptions()
 //*********************************************************************************
 {
-    return (message.containsKey("actions")) &&
+    return (hasMessage && (message.containsKey("actions")) &&
            (message["actions"].is<JsonArray>()) &&
-           (message["actions"].as<JsonArray>().size() > 0);
+           (message["actions"].as<JsonArray>().size() > 0));
 }
 
 response_t MessageApi::firstResponse()
@@ -154,15 +154,19 @@ message_t MessageApi::get(const char *url)
             Log.debug(MODULE, "Title: %s", result.title.c_str());
             Log.debug(MODULE, "Message: %s", result.message.c_str());
             Log.debug(MODULE, "Message has %s responses", (hasResponseOptions()) ? "some" : "no");
+            hasMessage = true;
         }
         else
         {
             Log.warn(MODULE, "Wrongly formatted message. Error was: %s", error.f_str());
+            result.title = "Nothing";
+            hasMessage = false;
         }
     }
     else
     {
         Log.error(MODULE, "Got return code %d", rc);
+        hasMessage = false;
     }
 
     return result;

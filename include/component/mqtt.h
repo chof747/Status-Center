@@ -7,35 +7,40 @@
 
 typedef std::function<void(String topic, String payload)> callback_t;
 
-struct mqttSubscription_t 
+struct mqttSubscription_t
 {
     String topic;
     callback_t callback;
 };
 
-class MqttClient: public Component
+class MqttClient : public Component
 {
-    public:
-        MqttClient();
+public:
+    MqttClient();
 
-        void setup();
-        void loop();
+    void setup();
+    void loop();
 
-        void tele(const char* topic, const char* message, bool retain = false);
-        void stat(const char* topic, const char* message, bool retain = false);
+    void tele(const char *topic, const char *message, bool retain = false);
+    void stat(const char *topic, const char *message, bool retain = false);
 
-        bool subscribe(const char* topic, callback_t callback);
+    bool subscribe(const char *topic, callback_t callback);
+    const char *getClientId()
+    {
+        return mqttClientId;
+    }
 
-    private:
-        PubSubClient client;  
+private:
+    PubSubClient client;
 
-        char mqttClientId[20];
-        mqttSubscription_t subscriptions[MQTT_SUBSCRIPTIONS];
-        int freeSubscriptionIx = 0;
+    char mqttClientId[20];
+    mqttSubscription_t subscriptions[MQTT_SUBSCRIPTIONS];
+    int freeSubscriptionIx = 0;
 
-        bool reconnect();
-        void subscriptionCallback(char* topic, uint8_t* payload, unsigned int length);
-        void publish(const char* topic, const char* message, bool retain = false);
+    bool reconnect();
+    bool resubscribe();
+    void subscriptionCallback(char *topic, uint8_t *payload, unsigned int length);
+    void publish(const char *topic, const char *message, bool retain = false);
 };
 
 extern MqttClient mqttClient;

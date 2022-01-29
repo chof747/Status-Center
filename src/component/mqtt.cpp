@@ -86,7 +86,7 @@ bool MqttClient::subscribe(const char* topic, callback_t callback)
         freeSubscriptionIx += 1;
 
         client.subscribe(topicbuf);
-        Log.info(MODULE, "Subscribing to topic %s", topicbuf);
+        Log.info(MODULE, "Subscribing to topic %s|", topicbuf);
         return true;
     }
     else
@@ -94,6 +94,20 @@ bool MqttClient::subscribe(const char* topic, callback_t callback)
         return false;
     }
 
+}
+
+bool MqttClient::resubscribe()
+//****************************************************************************************
+{
+    bool result = true;
+
+    for(int i=0;i<freeSubscriptionIx;++i)
+    {
+        result &= client.subscribe(subscriptions[i].topic.c_str());
+        Log.info(MODULE, "Resubscribing to topic %s|", subscriptions[i].topic.c_str());
+    }
+
+    return result;
 }
 
 bool MqttClient::reconnect()
@@ -111,11 +125,11 @@ bool MqttClient::reconnect()
                      MQTT_BROKER, MQTT_USER);
             if (client.connect(mqttClientId,  MQTT_USER, MQTT_PASSWORD))
             {
-                Log.info(MODULE, "connected to %s", MQTT_BROKER);
+                Log.info(MODULE, "connected to %s as %s", MQTT_BROKER, mqttClientId);
                 stat("status", "connected");
                 statusIndicator.switchAllOff();
                 statusIndicator.turnOn(StatusIndicator::LED_NOMINAL);
-
+                resubscribe();
             }
             else
             {
