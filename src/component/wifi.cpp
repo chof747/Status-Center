@@ -24,7 +24,7 @@ void WifiManager::setup()
     Log.info(MODULE, "Connection established.");
     Log.info(MODULE, "IP address: %s", WiFi.localIP().toString().c_str());
     statusIndicator.switchAllOff();
-    statusIndicator.turnOn(StatusIndicator::LED_INDICAT);
+    statusIndicator.switchIndicator(true);
 }
 
 void WifiManager::loop() 

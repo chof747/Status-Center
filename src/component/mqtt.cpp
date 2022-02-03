@@ -128,7 +128,7 @@ bool MqttClient::reconnect()
                 Log.info(MODULE, "connected to %s as %s", MQTT_BROKER, mqttClientId);
                 stat("status", "connected");
                 statusIndicator.switchAllOff();
-                statusIndicator.turnOn(StatusIndicator::LED_NOMINAL);
+                statusIndicator.switchTo(StatusIndicator::STATE_NOMINAL);
                 resubscribe();
             }
             else

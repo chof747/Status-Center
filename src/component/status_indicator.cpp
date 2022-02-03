@@ -6,7 +6,7 @@
 
 #define MODULE "STATUS-LED"
 
-#define STANDARD_STATE "nominal"
+#define STANDARD_STATE STATE_NOMINAL
 
 void StatusIndicator::setup()
 //****************************************************************************************
@@ -21,11 +21,15 @@ void StatusIndicator::setup()
     digitalWrite(StatusIndicator::LED_NOMINAL, LOW);
     digitalWrite(StatusIndicator::LED_INDICAT, LOW);
 
+    state = 0;
+    indicator = false;
+
+    enabled = true;
     stateStart = 0;
     stateDuration = 0;
     indicationStart = 0;
     indicationDuration = 0;
-    turnOn(StatusIndicator::LED_CRITICAL);
+    switchTo(STATE_CRITICAL);
 }
 
 void StatusIndicator::afterSetup()
@@ -38,19 +42,58 @@ void StatusIndicator::afterSetup()
 void StatusIndicator::loop()
 //****************************************************************************************
 {
+    display();
+}
+
+void StatusIndicator::display()
+//****************************************************************************************
+{
+    checkTiming();
+
+    if (enabled)
+    {
+        toggleLeds();
+    }
+    else
+    {
+        turnOff();
+    }
+}
+
+void StatusIndicator::checkTiming()
+//****************************************************************************************
+{
     if ((0 != stateDuration) && (stateDuration < (millis() - stateStart) / 1000))
     {
-        switchState(STANDARD_STATE);
+        state = STANDARD_STATE;
         stateStart = 0;
         stateDuration = 0;
     }
 
-    if ((0 != indicationDuration) && (indicationDuration < (millis() - indicationStart) / 1000 ))
+    if ((0 != indicationDuration) && (indicationDuration < (millis() - indicationStart) / 1000))
     {
-        switchIndicator(false);
+        indicator = false;
         indicationStart = 0;
         indicationDuration = 0;
     }
+}
+
+void StatusIndicator::toggleLeds()
+//****************************************************************************************
+{
+    digitalWrite(StatusIndicator::LED_CRITICAL, (state & STATE_CRITICAL) ? HIGH : LOW);
+    digitalWrite(StatusIndicator::LED_WARNING, (state & STATE_WARNING) ? HIGH : LOW);
+    digitalWrite(StatusIndicator::LED_NOMINAL, (state & STATE_NOMINAL) ? HIGH : LOW);
+    digitalWrite(StatusIndicator::LED_INDICAT, (indicator) ? HIGH : LOW);
+}
+
+void StatusIndicator::turnOff()
+//****************************************************************************************
+{
+    digitalWrite(StatusIndicator::LED_CRITICAL, LOW);
+    digitalWrite(StatusIndicator::LED_WARNING, LOW);
+    digitalWrite(StatusIndicator::LED_NOMINAL, LOW);
+    digitalWrite(StatusIndicator::LED_INDICAT, LOW);
 }
 
 callback_t StatusIndicator::getCallback()
@@ -65,7 +108,7 @@ void StatusIndicator::onMessage(String topic, String message)
     if (topic.compareTo("/alarmcenter/statusindicator") == 0)
     {
         handleStatusIndicatorMessage(message);
-    } 
+    }
     else if (topic.compareTo("/alarmcenter/indicator") == 0)
     {
         message.toUpperCase();
@@ -76,41 +119,31 @@ void StatusIndicator::onMessage(String topic, String message)
 void StatusIndicator::switchIndicator(bool enable)
 //****************************************************************************************
 {
-    digitalWrite(StatusIndicator::LED_INDICAT, (enable) ? HIGH : LOW);
+    indicator = enable;
+    display();
 }
 
 void StatusIndicator::switchIndicator(bool enable, unsigned long duration)
 //****************************************************************************************
 {
-    digitalWrite(StatusIndicator::LED_INDICAT, (enable) ? HIGH : LOW);
+    indicator = enable;
     indicationStart = millis();
     indicationDuration = duration;
+    display();
 }
 void StatusIndicator::switchAllOff()
 //****************************************************************************************
 {
-    digitalWrite(StatusIndicator::LED_CRITICAL, LOW);
-    digitalWrite(StatusIndicator::LED_WARNING, LOW);
-    digitalWrite(StatusIndicator::LED_NOMINAL, LOW);
-    digitalWrite(StatusIndicator::LED_INDICAT, LOW);
+    state = 0;
+    indicator = false;
+    display();
 }
 
-void StatusIndicator::turnOn(const int led)
+void StatusIndicator::switchTo(const int state)
 //****************************************************************************************
 {
-    digitalWrite(led, HIGH);
-}
-
-void StatusIndicator::turnOff(const int led)
-//****************************************************************************************
-{
-    digitalWrite(led, LOW);
-}
-
-void StatusIndicator::toggle(const int led)
-//****************************************************************************************
-{
-    digitalWrite(led, !digitalRead(led));
+    this->state = state;
+    display();
 }
 
 void StatusIndicator::handleStatusIndicatorMessage(String message)
@@ -130,27 +163,30 @@ void StatusIndicator::handleStatusIndicatorMessage(String message)
     }
 }
 
+void StatusIndicator::enableLeds(bool enable)
+//****************************************************************************************
+{
+    enabled = enable;
+    display();
+}   
+
 void StatusIndicator::switchState(const char *status)
 //****************************************************************************************
 {
     if (strcmp("critical", status) == 0)
     {
-        digitalWrite(StatusIndicator::LED_CRITICAL, HIGH);
-        digitalWrite(StatusIndicator::LED_WARNING, LOW);
-        digitalWrite(StatusIndicator::LED_NOMINAL, LOW);
+        state = STATE_CRITICAL;
     }
     else if (strcmp("warning", status) == 0)
     {
-        digitalWrite(StatusIndicator::LED_CRITICAL, LOW);
-        digitalWrite(StatusIndicator::LED_WARNING, HIGH);
-        digitalWrite(StatusIndicator::LED_NOMINAL, LOW);
+        state = STATE_WARNING;
     }
     else if (strcmp("nominal", status) == 0)
     {
-        digitalWrite(StatusIndicator::LED_CRITICAL, LOW);
-        digitalWrite(StatusIndicator::LED_WARNING, LOW);
-        digitalWrite(StatusIndicator::LED_NOMINAL, HIGH);
+        state = STATE_NOMINAL;
     }
+
+    display();
 
     Log.info(MODULE, "State set to %s", status);
 }
